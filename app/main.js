@@ -33,7 +33,7 @@ const addFormListener = ()=>{
         //console.log(formData.get('lastName'))
         const data = Object.fromEntries(formData.entries())
         console.log(data)
-        await fetch('/users',{
+        await fetch('./users',{
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
