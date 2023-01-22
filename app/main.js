@@ -21,6 +21,26 @@ const loadInitialTemplate = ()=>{
 }
 
 const getUsers = async () =>{
+    const response = await fetch('/users')
+    const users = await response.json()
+    //console.log(users)
+    const template = user =>`
+        <li>
+        ${user.name} ${user.lastName} <button data-id="${user._id}">Eliminar</button>
+        </li>
+    `
+    const userList = document.getElementById('user-list')
+    userList.innerHTML = users.map(user => template(user)).join('')
+    users.forEach(user=>{
+        const userNode = document.querySelector(`[data-id="${user._id}"]`)
+        userNode.onclick = async e=>{
+            await fetch(`/users/${user._id}`,{
+                method: 'DELETE',
+            })
+            userNode.parentNode.remove()
+            alert('Eliminado con exito')
+        }
+    })
 
 }
 
@@ -33,7 +53,7 @@ const addFormListener = ()=>{
         //console.log(formData.get('lastName'))
         const data = Object.fromEntries(formData.entries())
         console.log(data)
-        await fetch('./users',{
+        await fetch('/users',{
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -48,4 +68,5 @@ const addFormListener = ()=>{
 window.onload=()=>{
     loadInitialTemplate()
     addFormListener()
+    getUsers()
 }
